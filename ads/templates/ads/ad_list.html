@@ -1,10 +1,7 @@
-<head>
-  <meta name="dj4e" content="3e9702e1570af46ccd4551b7f4909f6f">
-</head>
 {% extends 'ads/base_menu.html' %}
 {% block title %}{{ settings.APP_NAME }}{% endblock %}
 {% block content %}
-<h1>Ads 2.0</h1>
+<h1>Ads 3.0</h1>
 <p>
 {% if ad_list %}
 <ul>
@@ -15,6 +12,28 @@
         (<a href="{% url 'ads:ad_update' ad.id %}">Edit</a> |
         <a href="{% url 'ads:ad_delete' ad.id %}">Delete</a>)
         {% endif %}
+                {% if user.is_authenticated %}
+        <!-- Two hrefs with two stacked icons each - one showing and one hidden -->
+        <a href="#" onclick=
+            "favPost('{% url 'ads:ad_unfavorite' ad.id %}', {{ ad.id }} );return false;"
+            {% if ad.id not in favorites %} style="display: none;" {% endif %}
+            id="favorite_star_{{ad.id}}">
+        <span class="fa-stack" style="vertical-align: middle;">
+        <i class="fa fa-star fa-stack-1x" style="color: orange;"></i>
+        <i class="fa fa-star-o fa-stack-1x"></i>
+        </span>
+        </a>
+        <!-- the second href -->
+        <a href="#" onclick=
+             "favPost('{% url 'ads:ad_favorite' ad.id %}', {{ ad.id }} );return false;"
+            {% if ad.id in favorites %} style="display: none;" {% endif %}
+            id="unfavorite_star_{{ad.id}}">
+        <span class="fa-stack" style="vertical-align: middle;">
+        <i class="fa fa-star fa-stack-1x" style="display: none; color: orange;"></i>
+        <i class="fa fa-star-o fa-stack-1x"></i>
+        </span>
+        </a>
+        {% endif %}
     </li>
   {% endfor %}
 </ul>
@@ -23,4 +42,17 @@
 {% endif %}
 </p>
 
+
+<script>
+function favPost(url, ad_id) {
+    console.log('Requesting JSON');
+    $.post(url, {},  function(rowz){
+        console.log(url, 'finished');
+        $("#unfavorite_star_"+ad_id).toggle();
+        $("#favorite_star_"+ad_id).toggle();
+    }).fail(function(xhr) {
+        alert('Url failed with '+xhr.status+' '+url);
+    });
+}
+</script>
 {% endblock %}
