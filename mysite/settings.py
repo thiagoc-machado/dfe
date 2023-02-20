@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'hello.apps.HelloConfig',
     'cats.apps.CatsConfig',
     'autos.apps.AutosConfig',
+    
+    'taggit',
 
 ]
 

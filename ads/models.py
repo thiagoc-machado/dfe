@@ -3,6 +3,8 @@ from django.core.validators import MinLengthValidator
 from django.contrib.auth.models import User
 from django.conf import settings
 
+from taggit.managers import TaggableManager
+
 class Ad(models.Model) :
     title = models.CharField(
             max_length=200,
@@ -17,6 +19,9 @@ class Ad(models.Model) :
     favorites = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Fav', related_name='favorite_ads')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+       # Tags
+    tags = TaggableManager(blank=True)
 
     # Shows up in the admin list
     def __str__(self):
